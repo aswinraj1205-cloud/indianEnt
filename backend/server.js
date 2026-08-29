@@ -85,12 +85,12 @@ const fallbackInterviews = [
 ];
 
 // Endpoint: Health Check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date() });
+app.get(['/api/health', '/health', '/api', '/'], (req, res) => {
+  res.json({ status: 'ok', message: 'Indian Entrepreneur API is operational', time: new Date() });
 });
 
 // Endpoint: Get Interviews
-app.get('/api/interviews', async (req, res) => {
+app.get(['/api/interviews', '/interviews'], async (req, res) => {
   try {
     if (!db.pool) {
       console.warn('[Server] DB pool not initialized. Serving fallback interviews.');
@@ -107,7 +107,7 @@ app.get('/api/interviews', async (req, res) => {
 });
 
 // Endpoint: Register Entrepreneur
-app.post('/api/register', async (req, res) => {
+app.post(['/api/register', '/register'], async (req, res) => {
   const {
     full_name,
     company_name,

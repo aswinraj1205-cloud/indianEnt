@@ -106,6 +106,30 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock Body Scroll & Keyboard Escape Handler when Modals or Mobile Menu is Open
+  useEffect(() => {
+    const isAnyOverlayOpen = mobileMenuOpen || showApplyModal || !!selectedInterview;
+    if (isAnyOverlayOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (selectedInterview) setSelectedInterview(null);
+        if (showApplyModal) closeApplyModal();
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen, showApplyModal, selectedInterview]);
+
   // Apply Form Handlers
   const handleApplyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -224,10 +248,18 @@ export default function App() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="mobile-menu-btn"
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
+        {mobileMenuOpen && (
+          <div
+            className="nav-mobile-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
       </nav>
 
       {/* ======= HERO SECTION — Full Landscape Background ======= */}
