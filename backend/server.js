@@ -184,6 +184,11 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`[Server] Running on port http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`[Server] Running on port http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+
